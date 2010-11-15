@@ -23,7 +23,7 @@ module Dirtymud
     end
 
     def write(data)
-      send_data(data + "\n\n")
+      send_data(data)
     end
   end
 end
