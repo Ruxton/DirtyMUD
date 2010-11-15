@@ -55,9 +55,9 @@ module Dirtymud
     def look_str(for_player)
       str = ""
       str << description + "\n"
-      str << exits_str + "\n"
       str << items_str + "\n"
       str << players_str(for_player) + "\n"
+      str << exits_str + "\n"      
     end
 
     def inspect
