@@ -10,9 +10,17 @@ module Dirtymud
       end
     end
 
+    def announce(msg)
+      send_data(msg)
+    end
+
+    def prompt(msg)
+      send_data(msg)
+      connection.write("\n#{@prompt}")
+    end
+
     def send_data(data)
       connection.write(data)
-      connection.write("\n#{@prompt}")
     end
 
     def go(dir)
@@ -24,15 +32,15 @@ module Dirtymud
         new_room.enter(self)
 
         # send the new room look to the player
-        send_data(new_room.look_str(self))
+        prompt(new_room.look_str(self))
       else
-        send_data("You can't go that way. #{room.exits_str}")
+        prompt("You can't go that way. #{room.exits_str}")
       end
     end
 
     def say(message)
       room.announce("#{name} says '#{message}'", :except => [self])
-      send_data("You say '#{message}'")
+      prompt("You say '#{message}'")
     end
 
     def get(item_text)
@@ -50,17 +58,17 @@ module Dirtymud
           room.items.delete(item)
           
           #tell the player they got it
-          send_data("You get #{item.name}")
+          prompt("You get #{item.name}")
 
           #tell everyone else in the room that the player took it
           room.announce("#{self.name} picks up #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          prompt("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing here by that name
-        send_data("There's nothing here that looks like '#{item_text}'")
+        prompt("There's nothing here that looks like '#{item_text}'")
       end
     end
 
@@ -79,27 +87,27 @@ module Dirtymud
           items.delete(item)
 
           #tell the player they dropped it
-          send_data("You drop #{item.name}")
+          prompt("You drop #{item.name}")
 
           #tell everyone else in the room that the player took it
           room.announce("#{self.name} drops #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          send_data("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          prompt("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing in their inventory by that name
-        send_data("There's nothing in your inventory that looks like '#{item_text}'")
+        prompt("There's nothing in your inventory that looks like '#{item_text}'")
       end
     end
 
     def help
       help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
-      send_data(help_contents)
+      prompt(help_contents)
     end
 
     def look
-      send_data(room.look_str(self))
+      prompt(room.look_str(self))
     end
 
     def inventory
@@ -110,7 +118,7 @@ module Dirtymud
         str << "  (nothing in your inventory, yet...)"
       end
 
-      send_data(str)
+      prompt(str)
     end
 
     def emote(action)

@@ -46,7 +46,7 @@ module Dirtymud
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
-      player.send_data(@starting_room.look_str(player))
+      player.prompt(@starting_room.look_str(player))
 
       @unauthed_users.delete(connection) #TODO test this
 
@@ -58,7 +58,7 @@ module Dirtymud
       players = players.reject {|p| options[:except].include?(p)} if options.has_key?(:except)
 
       players.each do |player|
-        player.send_data("#{message}")
+        player.announce("#{message}")
       end
     end
 
