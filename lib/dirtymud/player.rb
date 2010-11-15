@@ -16,7 +16,7 @@ module Dirtymud
 
     def prompt(msg)
       send_data(msg)
-      connection.write("\n#{@prompt}")
+      connection.write(@prompt)
     end
 
     def send_data(data)
