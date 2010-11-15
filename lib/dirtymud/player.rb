@@ -11,7 +11,8 @@ module Dirtymud
     end
 
     def send_data(data)
-      connection.write("#{data}\n#{@prompt}")
+      connection.write(data)
+      connection.write("\n#{@prompt}")
     end
 
     def go(dir)
