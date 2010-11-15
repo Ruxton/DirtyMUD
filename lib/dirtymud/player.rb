@@ -3,6 +3,7 @@ module Dirtymud
     attr_accessor :name, :room, :connection, :items
 
     def initialize(attrs)
+      @prompt = "> "
       @items = []
       attrs.each do |k, v| 
         self.send("#{k}=", v)
@@ -10,7 +11,7 @@ module Dirtymud
     end
 
     def send_data(data)
-      connection.write(data)
+      connection.write("#{data}\n#{@prompt}")
     end
 
     def go(dir)
