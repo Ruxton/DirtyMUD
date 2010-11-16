@@ -1,0 +1,22 @@
+en:
+  player:
+    go:
+      deny: "You can't got that way."
+    say: "You say"
+    drop:
+      self: "You dropped"
+      many: "Be more specific. Which did you want to drop?"
+      none: "There's nothing in your inventory that looks like"
+    get:
+      self: "You get"
+      many: "Be more specific. Which did you want to get?"
+      none: "There's nothing here that looks like"
+    unknown_input: "have you tried help?!"
+    inventory:
+      pre: "Your items:"
+      zero: "  (nothing in your inventory, yet...)"
+  room:
+    announce:
+      drop: "drops"
+      get: "picks up"
+      say: "says"

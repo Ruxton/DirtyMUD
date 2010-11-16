@@ -41,13 +41,13 @@ module Dirtymud
         # send the new room look to the player
         promptannounce(new_room.look_str(self))
       else
-        promptannounce("You can't go that way. #{room.exits_str}\n")
+        promptannounce("#{I18n::translate "player.go.deny"} #{room.exits_str}\n")
       end
     end
 
     def say(message)
-      room.announce("#{name} says '#{message}'", :except => [self])
-      promptannounce("You say '#{message}'")
+      room.announce("#{name} #{I18n::translate "room.announce.say"} '#{message}'", :except => [self])
+      promptannounce("#{I18n::translate "player.say"} '#{message}'")
     end
 
     def get(item_text)
@@ -58,24 +58,24 @@ module Dirtymud
         if matches.length == 1
           item = matches[0]
 
-          #give the item to the player
+          #give th  e item to the player
           items << item
           
           #remove the item from the room
           room.items.delete(item)
           
           #tell the player they got it
-          promptannounce("You get #{item.name}")
+          promptannounce("#{I18n::translate "player.get.self"} #{item.name}")
 
           #tell everyone else in the room that the player took it
-          room.announce("#{self.name} picks up #{item.name}", :except => [self])
+          room.announce("#{self.name} #{I18n::translate "room.announce.get"} #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          promptannounce("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          promptannounce("#{I18n::translate "player.get.many"} #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing here by that name
-        promptannounce("There's nothing here that looks like '#{item_text}'")
+        promptannounce("#{I18n::translate "player.get.none"} '#{item_text}'")
       end
     end
 
@@ -94,17 +94,17 @@ module Dirtymud
           items.delete(item)
 
           #tell the player they dropped it
-          promptannounce("You drop #{item.name}")
+          promptannounce("#{I18n::translate "player.drop.self"} #{item.name}")
 
           #tell everyone else in the room that the player took it
-          room.announce("#{self.name} drops #{item.name}", :except => [self])
+          room.announce("#{self.name} #{I18n::translate "room.announce.drop"} #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          promptannounce("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          promptannounce("#{I18n::translate "player.drop.many"} #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing in their inventory by that name
-        promptannounce("There's nothing in your inventory that looks like '#{item_text}'")
+        promptannounce("#{I18n::translate "player.drop.none"} '#{item_text}'")
       end
     end
 
@@ -118,11 +118,11 @@ module Dirtymud
     end
 
     def inventory
-      str = "Your items:\n"
+      str = I18n::translate("player.inventory.pre")+"\n"
       if items.length > 0
         items.each { |i| str << "  - #{i.name}\n" }
       else
-        str << "  (nothing in your inventory, yet...)"
+        str << I18n::translate("player.inventory.zero")+"\n"
       end
 
       promptannounce(str)
@@ -133,7 +133,7 @@ module Dirtymud
     end
 
     def unknown_input
-      announce "have you tied help?!"
+      promptannounce I18n::translate("player.unknown_input")
     end
 
     def do_command(input)
@@ -145,8 +145,9 @@ module Dirtymud
       when /^(i|inv|inventory)$/ then inventory
       when /^(l|look)$/ then look
       when /^\/me (.+)$$/ then emote($1)
-      when /^help$/ then help
-      else unknown_input
+      when /^\?|help$/ then help
+      when /^(.)+$$/ then unknown_input
+      else look
       end
     end
   end
