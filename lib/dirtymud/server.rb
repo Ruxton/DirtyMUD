@@ -46,7 +46,7 @@ module Dirtymud
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
-      player.prompt(@starting_room.look_str(player))
+      player.promptannounce(@starting_room.look_str(player))
 
       @unauthed_users.delete(connection) #TODO test this
 

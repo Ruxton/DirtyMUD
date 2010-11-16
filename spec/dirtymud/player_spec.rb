@@ -62,7 +62,7 @@ describe Dirtymud::Player do
       context 'moving in an invalid direction' do
         it "tells you that you can't go that way" do
           @player.room = @room_n
-          @player.connection.should_receive(:write).with("You can't go that way. [Exits: S]")
+          @player.connection.should_receive(:write).with( "You can't go that way. [Exits: S]\n") 
           @player.go('n')
         end
       end
@@ -94,7 +94,7 @@ describe Dirtymud::Player do
       end
 
       it 'sends the player confirmation about what they said' do
-        @player1.connection.should_receive(:write).with("You say 'hello'")
+        @player1.connection.should_receive(:write).with("You say 'hello'\n")
         @player1.say('hello')
       end
     end
@@ -113,7 +113,7 @@ describe Dirtymud::Player do
           @sword = Dirtymud::Item.new(:name => 'sword')
           @room.items << @sword
           @player1.items.should be_empty
-          @player1.connection.should_receive(:write).with('You get sword')
+          @player1.connection.should_receive(:write).with("You get sword\n")
           @player1.room.should_receive(:announce).with("#{@player1.name} picks up #{@sword.name}", :except => [@player1])
           @player1.get('sword')
           @player1.items.should include(@sword)
@@ -127,7 +127,7 @@ describe Dirtymud::Player do
           @room.items << @sword1
           @room.items << @sword2
           @player1.items.should be_empty
-          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to get? 'sword one', 'sword two'")
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to get? 'sword one', 'sword two'\n")
           @player1.get('sword')
           @player1.items.should be_empty
         end
@@ -135,7 +135,7 @@ describe Dirtymud::Player do
 
       context 'when there are no matches' do
         it 'tells the player there arent any of that thing here' do
-          @player1.connection.should_receive(:write).with("There's nothing here that looks like 'foo'")
+          @player1.connection.should_receive(:write).with("There's nothing here that looks like 'foo'\n")
           @player1.get('foo')
           @player1.items.should be_empty
         end
@@ -159,7 +159,7 @@ describe Dirtymud::Player do
           @player1.items.should include(@sword)
           @player1.room.items.should_not include(@sword)
 
-          @player1.connection.should_receive(:write).with('You drop sword')
+          @player1.connection.should_receive(:write).with("You drop sword\n")
           @player1.room.should_receive(:announce).with("#{@player1.name} drops #{@sword.name}", :except => [@player1])
           @player1.drop('sword')
 
@@ -176,7 +176,7 @@ describe Dirtymud::Player do
           @player1.items << @sword2
           @player1.items.should include(@sword1, @sword2)
 
-          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to drop? 'sword one', 'sword two'")
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to drop? 'sword one', 'sword two'\n")
 
           @player1.drop('sword')
           @player1.items.should include(@sword1, @sword2)
@@ -185,7 +185,7 @@ describe Dirtymud::Player do
 
       context 'when there are no matches' do
         it 'tells the player there arent any of that thing in their inventoryj' do
-          @player1.connection.should_receive(:write).with("There's nothing in your inventory that looks like 'foo'")
+          @player1.connection.should_receive(:write).with("There's nothing in your inventory that looks like 'foo'\n")
           @player1.drop('foo')
         end
       end
@@ -202,7 +202,7 @@ describe Dirtymud::Player do
       context 'when the player does not have anything in his inventory' do
         it 'sends the player connection an empty inventory list' do
           @player.items = [ ]
-          @player.connection.should_receive(:write).with("Your items:\n  (nothing in your inventory, yet...)")
+          @player.connection.should_receive(:write).with("Your items:\n  (nothing in your inventory, yet...)\n")
           @player.inventory
         end
       end
