@@ -2,7 +2,6 @@ require 'rubygems'
 require 'bundler/setup'
 require 'eventmachine'
 require 'lib/dirtymud'
-require 'i18n'
 
 
 module Dirtymud
@@ -12,10 +11,6 @@ module Dirtymud
       @identifier = self.object_id
 
       $server.user_connected!(self)
-
-      Dir.glob("config/i18n/*.yml").each do |locale|
-        I18n.load_path << locale
-      end
 
     end
 

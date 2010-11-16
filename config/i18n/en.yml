@@ -1,10 +1,10 @@
 en:
   player:
     go:
-      deny: "You can't got that way."
+      deny: "You can't go that way."
     say: "You say"
     drop:
-      self: "You dropped"
+      self: "You drop"
       many: "Be more specific. Which did you want to drop?"
       none: "There's nothing in your inventory that looks like"
     get:

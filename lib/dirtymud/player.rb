@@ -19,9 +19,7 @@ module Dirtymud
     end
     
     def promptannounce(msg)
-      if !msg.end_with?("\n")
-        msg = msg + "\n"
-      end
+      msg = msg.end_with?("\n") ? msg : msg + "\n"
       connection.write(msg)
       connection.write(@prompt)
     end
