@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Dirtymud::Server do
-  describe 'a server' do
+  describe 'server' do
     before do
       @server = Dirtymud::Server.new
     end
@@ -12,10 +12,10 @@ describe Dirtymud::Server do
 
     describe '.initialize' do
       it 'loads the rooms' do
-        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+        pending "find out how to test an that an initializer invokes some methods like #load_rooms!"
       end
       it 'loads the items' do
-        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+        pending "find out how to test an that an initializer invokes some methods like #load_rooms!"
       end
     end
 
@@ -33,16 +33,26 @@ describe Dirtymud::Server do
     end
 
     describe '.player_connected!(connection)' do
+
       before do
-        @dirk_con = mock(EventMachine::Connection)
+        @dirk_con = mock(EventMachine::Connection).as_null_object
+        @player = Dirtymud::Player.new( :name => 'Dirk', :connection => @dirk_con )
+      end
+      
+      it 'adds a new player to players_by_connection hash' do
+        @server.player_connected!(@dirk_con, :name => 'Dirk')        
+        @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
+      end  
+
+      it 'sends them the initial room description' do
+        @dirk_con.should_receive(:write).with("#{@server.starting_room.look_str(@player)}")
+        @server.player_connected!(@dirk_con, :name => 'Dirk')
+      end
+      
+      it 'deletes any unauthed users' do
+        pending "will work on this soon"
       end
 
-      it 'creates a new player, adds them to players_by_connection hash, and sends them the initial room description' do
-        #REFACTOR: split these assertions into seperate expectations, if possible.
-        @dirk_con.should_receive(:write).with("#{@server.starting_room.look_str(nil)}")
-        @server.player_connected!(@dirk_con, :name => 'Dirk')
-        @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
-      end
     end
 
     describe '#announce' do
