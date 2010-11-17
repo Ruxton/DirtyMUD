@@ -30,7 +30,7 @@ module Dirtymud
     end
 
     def available_exits
-      exits.collect{|dir, room| dir.to_s.downcase+dir.to_s.upcase}.join(' ')
+      exits.collect{|dir, room| dir.to_s.downcase+' '+dir.to_s.upcase}.join(' ')
     end
 
     def exits_str
@@ -64,9 +64,10 @@ module Dirtymud
     end
 
     def do_command(player,input)
-      dirs = available_exits.gsub " ", ""
+      dirs = available_exits.gsub " ", "|"
+      announce dirs.inspect
       case input
-        when /^[#{dirs}]$/ then player.go(input)
+        when /^#{dirs}$/ then player.go(input)
         else player.unknown_input
       end
     end
