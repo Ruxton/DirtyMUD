@@ -30,6 +30,7 @@ module Dirtymud
 
     def go(dir)
       #find out what room to go to
+      dir.downcase!
       if room.exits[dir.to_sym]
         # switch rooms
         room.leave(self)
@@ -131,21 +132,21 @@ module Dirtymud
     end
 
     def unknown_input
-      promptannounce I18n::translate("player.unknown_input")
+      promptannounce I18n::translate("server.unknown_input")
     end
 
     def do_command(input)
       case input
-      when /^[nesw]$/ then go(input)
-      when /^say (.+)$/ then say($1)
-      when /^get (.+)$/ then get($1)
-      when /^drop (.+)$/ then drop($1)
-      when /^(i|inv|inventory)$/ then inventory
-      when /^(l|look)$/ then look
-      when /^\/me (.+)$$/ then emote($1)
-      when /^\?|help$/ then help
-      when /^(.)+$$/ then unknown_input
-      else look
+        when /^go ([nNeEsSwW])$/ then go($1)
+        when /^say (.+)$/ then say($1)
+        when /^get (.+)$/ then get($1)
+        when /^drop (.+)$/ then drop($1)
+        when /^(i|inv|inventory)$/ then inventory
+        when /^(l|look)$/ then look
+        when /^\/me (.+)$$/ then emote($1)
+        when /^\?|help$/ then help
+        when /^(.)+$$/ then room.do_command(self, input)
+        else look
       end
     end
   end

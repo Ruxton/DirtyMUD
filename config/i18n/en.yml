@@ -11,7 +11,6 @@ en:
       self: "You get"
       many: "Be more specific. Which did you want to get?"
       none: "There's nothing here that looks like"
-    unknown_input: "have you tried help?!"
     inventory:
       pre: "Your items:"
       zero: "  (nothing in your inventory, yet...)"
@@ -23,3 +22,5 @@ en:
       leave: "has left the room."
     items:
       pre: "Items here:"
+  server:
+    unknown_input: "have you tried help?!"

@@ -29,9 +29,12 @@ module Dirtymud
       server.announce(message, options.merge(:only => players))
     end
 
+    def available_exits
+      exits.collect{|dir, room| dir.to_s.downcase+dir.to_s.upcase}.join(' ')
+    end
 
     def exits_str
-      dirs = exits.collect{|dir, room| dir.to_s.upcase}.join(' ')
+      dirs = exits.collect{|dir, room| dir.to_s.upcase}.join(', ')
       "[Exits: #{dirs}]"
     end
 
@@ -58,6 +61,14 @@ module Dirtymud
       str << items_str + "\n"
       str << players_str(for_player) + "\n"
       str << exits_str + "\n"      
+    end
+
+    def do_command(player,input)
+      dirs = available_exits.gsub " ", ""
+      case input
+        when /^[#{dirs}]$/ then player.go(input)
+        else player.unknown_input
+      end
     end
 
     def inspect
