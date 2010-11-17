@@ -22,7 +22,7 @@ module Dirtymud
     def leave(player)
       players.delete(player)
       # announce to other players that they've left the room
-      announce("#{player.name} #{I18n::translate "room.announce.enter"}", :except => [player])
+      announce("#{player.name} #{I18n::translate "room.announce.leave"}", :except => [player])
     end
 
     def announce(message, options = {})

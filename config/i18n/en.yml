@@ -20,6 +20,7 @@ en:
       get: "picks up"
       say: "says"
       leave: "has left the room."
+      enter: "has entered the room."
     items:
       pre: "Items here:"
   server:
