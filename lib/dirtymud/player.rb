@@ -29,7 +29,7 @@ module Dirtymud
     end
 
     def go(dir)
-      #allow CAPITAL directions
+      #allow CAPITAL directions, room.available_exits and room.do_command allows this now
       dir.downcase!
 
       #find out what room to go to
