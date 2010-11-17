@@ -15,14 +15,14 @@ module Dirtymud
     def enter(player)
       player.room = self
       players.push(player)
-      # annoucne to other players that they've entered the room
-      announce("#{player.name} has entered the room.", :except => [player])
+      # announce to other players that they've entered the room
+      announce("#{player.name} #{I18n::translate "room.announce.enter"}", :except => [player])
     end
 
     def leave(player)
       players.delete(player)
-      # annoucne to other players that they've left the room
-      announce("#{player.name} has left the room.", :except => [player])
+      # announce to other players that they've left the room
+      announce("#{player.name} #{I18n::translate "room.announce.enter"}", :except => [player])
     end
 
     def announce(message, options = {})
@@ -45,7 +45,7 @@ module Dirtymud
     def items_str
       str = ""
       if items.length > 0
-        str = "Items here:\n"
+        str = "#{I18n::translate "room.items.pre"}\n"
         items.each { |i| str << "  - #{i.name}\n" }
       end
 

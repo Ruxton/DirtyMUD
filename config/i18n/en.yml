@@ -20,3 +20,6 @@ en:
       drop: "drops"
       get: "picks up"
       say: "says"
+      leave: "has left the room."
+    items:
+      pre: "Items here:"
