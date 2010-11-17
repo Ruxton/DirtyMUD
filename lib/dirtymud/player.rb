@@ -139,7 +139,7 @@ module Dirtymud
 
     def do_command(input)
       case input
-        when /^go ([nNeEsSwW])$/ then go($1)
+        when /^go (.+)$/ then go($1)
         when /^say (.+)$/ then say($1)
         when /^get (.+)$/ then get($1)
         when /^drop (.+)$/ then drop($1)
