@@ -1,10 +1,14 @@
 source :rubygems
 
 gem 'eventmachine'
-gem 'rspec'
 gem 'ruby-debug'
-gem 'autotest'
-gem 'autotest-growl'
-gem 'autotest-fsevent'
 gem 'redgreen'
 gem 'i18n'
+
+group :test do
+  gem 'rspec'
+  gem 'rcov'
+  gem 'autotest'
+  gem 'autotest-growl'
+  gem 'autotest-fsevent'
+end

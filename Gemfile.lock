@@ -10,6 +10,7 @@ GEM
     eventmachine (0.12.10)
     i18n (0.4.1)
     linecache (0.43)
+    rcov (0.9.9)
     redgreen (1.2.2)
     rspec (2.0.1)
       rspec-core (~> 2.0.1)
@@ -37,6 +38,7 @@ DEPENDENCIES
   autotest-growl
   eventmachine
   i18n
+  rcov
   redgreen
   rspec
   ruby-debug
