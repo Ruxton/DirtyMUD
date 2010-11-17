@@ -29,8 +29,10 @@ module Dirtymud
     end
 
     def go(dir)
-      #find out what room to go to
+      #allow CAPITAL directions
       dir.downcase!
+
+      #find out what room to go to
       if room.exits[dir.to_sym]
         # switch rooms
         room.leave(self)
