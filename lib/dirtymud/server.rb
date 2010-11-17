@@ -50,7 +50,7 @@ module Dirtymud
 
       @unauthed_users.delete(connection) #TODO test this
 
-      return player
+      player
     end
 
     def announce(message, options = {})
