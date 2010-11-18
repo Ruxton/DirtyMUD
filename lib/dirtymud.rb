@@ -1,4 +1,4 @@
-requires = %w(entity room player server item mob)
+requires = %w(entity room player server item npc)
 requires.each do |r|
   require File.expand_path("../dirtymud/#{r}", __FILE__)
 end
