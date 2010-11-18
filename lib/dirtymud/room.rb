@@ -64,9 +64,12 @@ module Dirtymud
     end
 
     def do_command(player,input)
-      dirs = available_exits.gsub " ", "|"
+      dirs = self.available_exits + " n e s w N E S W"
+      p self.available_exits
+      
+      dirs = dirs.gsub " ", "|"
       case input
-        when /^#{dirs}$/ then player.go(input)
+        when /^(#{dirs})$/ then player.go(input)
         else player.unknown_input
       end
     end

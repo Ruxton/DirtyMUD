@@ -32,13 +32,13 @@ module Dirtymud
     def welcome_message(connection)
       file = File.expand_path('../../../world/welcome.txt', __FILE__)
       welcome_contents = File.read(file)
-      connection.write welcome_contents
+      connection.write(welcome_contents)
     end
 
     def user_connected!(connection)
       @unauthed_users[connection] = {}
       welcome_message(connection)
-      connection.write 'Enter Your Character Name: '
+      connection.write "#{I18n::translate "server.ask.character_name"}"
     end
 
     def player_connected!(connection, params = {})

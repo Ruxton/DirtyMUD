@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Dirtymud::Player do
   describe 'a player' do
@@ -24,8 +24,12 @@ describe Dirtymud::Player do
     it 'has a name' do
       @player.name.should == 'Dirk'
     end
+    
+    it 'has a prompt of type String' do
+      @player.prompt.class.should == String
+    end
 
-    it 'has a room' do
+    it 'is in a room' do
       @player.room.should == @room1
     end
 
@@ -226,15 +230,14 @@ describe Dirtymud::Player do
       end
     end
 
-    describe '#do_command' do
-      it 'handles commands for the cardinal directions' do
-        dirs = %w(n e s w)
-        dirs.each do |dir| 
-          @player.should_receive(:go).with(dir.to_s)
-          @player.room = @room_center
-          @player.do_command(dir)
-        end
+    describe '#unknown_input' do
+      it 'sends a message to the player' do
+        @player.connection.should_receive(:write).with("have you tried help?!\n")
+        @player.unknown_input
       end
+    end
+
+    describe '#do_command' do
 
       it 'handles look' do
         @player.should_receive(:look).exactly(2).times
@@ -269,6 +272,17 @@ describe Dirtymud::Player do
         #handles help
         @player.should_receive(:help)
         @player.do_command('help')
+      end
+
+      # The player asks the room to move, the room says ok and calls player.go
+      it 'passes unknown commands (like movement) to the room' do
+        @room.should_receive(:do_command).with(@player,'n')
+        @player.do_command('n')
+      end
+
+      it 'handles empty commands as look' do
+        @player.should_receive(:look)
+        @player.do_command('')
       end
     end
 

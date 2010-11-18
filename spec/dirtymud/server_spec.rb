@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Dirtymud::Server do
   describe 'server' do
@@ -53,6 +53,28 @@ describe Dirtymud::Server do
         pending "will work on this soon"
       end
 
+    end
+
+    describe '#user_connected!' do
+      before do
+        @dirk_con = mock(EventMachine::Connection).as_null_object
+      end
+
+      it 'should add you to unauthed users' do
+        pending "this limbo is an annoying tests! halp!"
+      end
+      
+      it 'should send you the welcome message' do
+        @msg = "Welcome to DirtyMud"
+        File.stub!(:read) { @msg }
+        @dirk_con.should_receive(:write).with(@msg)
+        @server.user_connected!(@dirk_con)
+      end
+      
+      it 'should ask for a character name' do
+        @dirk_con.should_receive(:write).with("Enter your character name:")
+        @server.user_connected!(@dirk_con)
+      end
     end
 
     describe '#announce' do

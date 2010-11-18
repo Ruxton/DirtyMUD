@@ -4,6 +4,7 @@ gem 'eventmachine'
 gem 'ruby-debug'
 gem 'redgreen'
 gem 'i18n'
+gem 'rake'
 
 group :test do
   gem 'rspec'

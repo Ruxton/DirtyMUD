@@ -147,7 +147,7 @@ module Dirtymud
         when /^(l|look)$/ then look
         when /^\/me (.+)$$/ then emote($1)
         when /^\?|help$/ then help
-        when /^(.)+$$/ then room.do_command(self, input)
+        when /^(.)+$/ then room.do_command(self, input)
         else look
       end
     end

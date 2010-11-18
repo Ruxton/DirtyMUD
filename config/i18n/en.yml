@@ -25,3 +25,5 @@ en:
       pre: "Items here:"
   server:
     unknown_input: "have you tried help?!"
+    ask:
+      character_name: "Enter your character name:"
