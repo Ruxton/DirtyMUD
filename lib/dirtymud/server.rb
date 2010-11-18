@@ -17,7 +17,7 @@ module Dirtymud
         con_state = @unauthed_users[from_connection]
         if con_state[:name].nil?
           con_state[:name] = input.chomp
-          from_connection.write 'Please enter your password: '
+          from_connection.write "#{I18n::translate "server.ask.character_password"}"
         elsif con_state[:password].nil?
           con_state[:password] = input.chomp
           #TODO: verify password at some point

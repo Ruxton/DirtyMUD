@@ -27,3 +27,4 @@ en:
     unknown_input: "have you tried help?!"
     ask:
       character_name: "Enter your character name:"
+      character_password: "Please enter your password:"
