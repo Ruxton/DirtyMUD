@@ -1,12 +1,14 @@
 module Dirtymud
-  class Player
-    attr_accessor :name, :room, :connection, :items
+  class Player < Entity
+    attr_accessor :connection, :items
 
     def initialize(attrs)
       @items = []
       attrs.each do |k, v| 
         self.send("#{k}=", v)
       end
+
+      super(attrs)
     end
 
     def send_data(data)

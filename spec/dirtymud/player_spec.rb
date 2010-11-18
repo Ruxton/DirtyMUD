@@ -21,22 +21,14 @@ describe Dirtymud::Player do
       @room_center.exits = {:n => @room_n, :s => @room_s, :e => @room_e, :w => @room_w}
     end
 
-    it 'has a name' do
-      @player.name.should == 'Dirk'
-    end
-
-    it 'has a room' do
-      @player.room.should == @room1
+    it 'inherits from Entity' do
+      @player.class.superclass.should == Dirtymud::Entity
     end
 
     it 'has a connection' do
       @player.should respond_to(:connection)
     end
     
-    it 'has items' do
-      @player.items.should be_kind_of(Array)
-    end
-
     describe '#go' do
       context 'moving in a valid direction' do
         it 'makes an announcement on the server' do
