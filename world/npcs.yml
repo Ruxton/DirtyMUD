@@ -1,0 +1,8 @@
+npcs:
+  - id: 1
+    name: 'bunny rabbit'
+    hit_points: 10
+
+  - id: 2
+    name: 'knight of death'
+    hit_points: 1000

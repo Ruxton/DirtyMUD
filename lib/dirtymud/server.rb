@@ -1,12 +1,13 @@
 module Dirtymud
   class Server
-    attr_accessor :players_by_connection, :rooms, :starting_room, :items
+    attr_accessor :players_by_connection, :rooms, :starting_room, :items, :npcs
 
     def initialize
       @unauthed_users = {}
       @players_by_connection = {}
       @rooms = {}
       @items = {}
+      @npcs = {}
       load_items!
       load_rooms!
     end
@@ -86,6 +87,16 @@ module Dirtymud
       items = YAML.load_file(File.expand_path('../../../world/items.yml', __FILE__))['items']
       items.each do |item|
         @items[item['id']] = Dirtymud::Item.new(:id => item['id'], :name => item['name'])
+      end
+    end
+
+    def load_npcs!
+      npcs = YAML.load_file(File.expand_path('../../../world/npcs.yml', __FILE__))['npcs']
+      npcs.each do |npc|
+        @npcs[npc['id']] = Dirtymud::NPC.new({
+          :id => npc['id'], 
+          :name => npc['name'],
+          :hit_points => npc['hit_points'] })
       end
     end
   end

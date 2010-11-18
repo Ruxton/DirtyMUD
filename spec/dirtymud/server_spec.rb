@@ -10,6 +10,10 @@ describe Dirtymud::Server do
       @server.players_by_connection.should be_kind_of(Hash)
     end
 
+    it 'has an npcs hash' do 
+      @server.npcs.should be_kind_of(Hash)
+    end
+
     describe '.initialize' do
       it 'loads the rooms' do
         #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
@@ -97,6 +101,7 @@ describe Dirtymud::Server do
 
     describe '#load_rooms!' do
       before :each do
+        #rooms support having items in them, so load some items to help test that capability
         items_yaml = {'items' => [
           {'id' => 1, 'name' => 'a sword'}
         ]}
@@ -121,6 +126,26 @@ describe Dirtymud::Server do
 
       it 'sets the starting_room' do
         @server.starting_room.should == @server.rooms[1]
+      end
+    end
+
+    describe '#load_npcs!' do
+      before :each do
+        npcs_yaml = {
+          'npcs' => [
+            {'id' => 1, 'name' => 'bunny rabbit', 'hit_points' => 10}
+          ]
+        }
+
+        #mock out the return value of loading items.yml 
+        YAML.should_receive(:load_file).with(File.expand_path('../../../world/npcs.yml', __FILE__)).and_return(npcs_yaml)
+        @server.load_npcs!
+      end
+
+      it 'populates @npcs with a hash of the npcs, keyed on id' do
+        @server.npcs[1].id.should == 1
+        @server.npcs[1].name.should == 'bunny rabbit'
+        @server.npcs[1].hit_points.should == 10
       end
     end
   end
