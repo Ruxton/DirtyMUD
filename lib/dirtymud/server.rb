@@ -1,5 +1,9 @@
+require 'observer'
+
 module Dirtymud
   class Server
+    include Observable
+
     attr_accessor :players_by_connection, :rooms, :starting_room, :items, :npcs
 
     def initialize
@@ -98,6 +102,11 @@ module Dirtymud
           :name => npc['name'],
           :hit_points => npc['hit_points'] })
       end
+    end
+
+    def tick!
+      changed
+      notify_observers('tick')
     end
   end
 end

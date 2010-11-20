@@ -150,5 +150,12 @@ describe Dirtymud::Server do
         @server.npcs[1].hit_points.should == 10
       end
     end
+
+    describe '#tick!' do
+      it 'calls notify_observers("tick")' do
+        @server.should_receive(:notify_observers).with('tick')
+        @server.tick!
+      end
+    end
   end
 end
