@@ -7,9 +7,9 @@ describe Dirtymud::Room do
       @server = mock(Dirtymud::Server).as_null_object
       @room = Dirtymud::Room.new(:description => 'Simple room.', :server => @server, :id => '1')
       @room2 = Dirtymud::Room.new(:description => 'Room 2', :server => @server, :id => '2')
-      @player = Dirtymud::Player.new(:name => 'Dirk')
-      @player2 = Dirtymud::Player.new(:name => 'Alice')
-      @player3 = Dirtymud::Player.new(:name => 'Bob')
+      @player = Dirtymud::Player.new(:name => 'Dirk', :server => @server)
+      @player2 = Dirtymud::Player.new(:name => 'Alice', :server => @server)
+      @player3 = Dirtymud::Player.new(:name => 'Bob', :server => @server)
 
       #setup exits
       @room.exits[:n] = @room2

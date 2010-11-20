@@ -29,7 +29,7 @@ describe Dirtymud::Server do
       context 'when a player is connected' do
         it 'sends the command on to the player instance' do
           @dirk_con = EventMachine::Connection.new(nil)
-          @dirk = Dirtymud::Player.new(:name => 'Dirk', :connection => @dirk_con)
+          @dirk = Dirtymud::Player.new(:name => 'Dirk', :connection => @dirk_con, :server => @server)
           @server.players_by_connection[@dirk_con] = @dirk
 
           @dirk.should_receive(:do_command).with('n')

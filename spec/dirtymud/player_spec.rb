@@ -11,7 +11,7 @@ describe Dirtymud::Player do
       @room_w = Dirtymud::Room.new(:description => 'Room West', :server => @server)
       
       @connection = mock(EventMachine::Connection).as_null_object
-      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => @connection, :room => @room1)
+      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => @connection, :room => @room1, :server => @server)
 
       #setup room exits
       @room_w.exits = {:e => @room_center}

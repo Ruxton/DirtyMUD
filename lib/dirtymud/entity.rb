@@ -1,6 +1,8 @@
 module Dirtymud
   class Entity
-    attr_accessor :hit_points, :name, :room, :items
+    include Dirtymud::Responder
+    
+    attr_accessor :hit_points, :name, :room, :items, :server
 
     def initialize(attrs)
       #we expec these required attrs
@@ -13,6 +15,16 @@ module Dirtymud
       end
       
       @items ||= []
+
+      #listen for events from the server
+      observe(attrs[:server])
+    end
+
+    def event_tick(args={})
+      regen
+    end
+
+    def regen
     end
   end
 end

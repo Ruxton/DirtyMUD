@@ -40,7 +40,7 @@ module Dirtymud
     end
 
     def player_connected!(connection, params = {})
-      player = Player.new(:name => params[:name], :connection => connection)
+      player = Player.new(:name => params[:name], :connection => connection, :server => self)
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
@@ -98,6 +98,7 @@ module Dirtymud
       npcs = YAML.load_file(File.expand_path('../../../world/npcs.yml', __FILE__))['npcs']
       npcs.each do |npc|
         @npcs[npc['id']] = Dirtymud::NPC.new({
+          :server => self,
           :id => npc['id'], 
           :name => npc['name'],
           :hit_points => npc['hit_points'] })
