@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Dirtymud::Server do
   describe 'a server' do
-    before do
-      @server = Dirtymud::Server.new
-    end
+    before { @server = Dirtymud::Server.new }
 
     it 'has a players_by_connection hash' do
       @server.players_by_connection.should be_kind_of(Hash)
@@ -12,6 +10,10 @@ describe Dirtymud::Server do
 
     it 'has an npcs hash' do 
       @server.npcs.should be_kind_of(Hash)
+    end
+
+    it 'has a rooms hash' do 
+      @server.rooms.should be_kind_of(Hash)
     end
 
     describe '.initialize' do
