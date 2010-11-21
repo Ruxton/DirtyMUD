@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Dirtymud::Server do
   describe 'a server' do
     before { @server = Dirtymud::Server.new }
+    subject { @server }
 
     it 'has a players_by_connection hash' do
       @server.players_by_connection.should be_kind_of(Hash)
@@ -16,7 +17,10 @@ describe Dirtymud::Server do
       @server.rooms.should be_kind_of(Hash)
     end
 
-    describe '.initialize' do
+    specify { subject.fights.should be_kind_of(Array) }
+
+
+    describe '#initialize' do
       it 'loads the rooms' do
         #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
       end
@@ -25,7 +29,7 @@ describe Dirtymud::Server do
       end
     end
 
-    describe '.input_received!(from_connection, input)' do
+    describe '#input_received!(from_connection, input)' do
       context 'when a player is connected' do
         it 'sends the command on to the player instance' do
           @dirk_con = EventMachine::Connection.new(nil)
@@ -38,7 +42,7 @@ describe Dirtymud::Server do
       end
     end
 
-    describe '.player_connected!(connection)' do
+    describe '#player_connected!(connection)' do
       before do
         @dirk_con = mock(EventMachine::Connection)
       end

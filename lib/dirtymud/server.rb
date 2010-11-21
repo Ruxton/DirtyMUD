@@ -4,7 +4,7 @@ module Dirtymud
   class Server
     include Observable
 
-    attr_accessor :players_by_connection, :rooms, :starting_room, :items, :npcs
+    attr_accessor :players_by_connection, :rooms, :starting_room, :items, :npcs, :fights
 
     def initialize
       @unauthed_users = {}
@@ -12,6 +12,7 @@ module Dirtymud
       @rooms = {}
       @items = {}
       @npcs = {}
+      @fights = []
       load_items!
       load_rooms!
     end
