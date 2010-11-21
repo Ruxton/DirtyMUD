@@ -1,10 +1,21 @@
 Short Term
   - Prompts
-  - Ticks
+
+  - Ticks - STARTED
+    - entities now listen for server ticks when they're created
+    - #event_tick fires on each server tick
+    - this is our entry point to have entities do whatever they might need to do on each tick
+
+  - Player vs Monster combat!
+    - THOUGHTS:
+      - how to keep track of each fight in progress? 
+        - keep an array of fighting entities on server?
+        - each entity knows about ticks so they could keep track of their fighting state and take a swipe at their target on each tick?
+      - does the order we resolve each battle loop iteration matter? i.e. initiative order for each fight. I think it probably does matter, which means having entities handle battle themselves won't resolve fights in an guaranteed consistent order because they're observing server events in a possibly unpredicible order, yes?
+
   
 
+
 Cool Shit To Prioritize
-  - Player health
   - Monsters
-  - Player vs Monster combat!
   - Add player#tell <player> <txt> command to send a private msg player to player
