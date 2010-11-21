@@ -7,8 +7,8 @@ module Dirtymud
     end
 
     def tick!
-      @fighters[0].attack(@fighters[1])
-      @fighters[1].attack(@fighters[0])
+      @fighters[0].attack!(@fighters[1])
+      @fighters[1].attack!(@fighters[0])
     end
   end
 end

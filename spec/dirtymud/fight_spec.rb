@@ -23,8 +23,8 @@ module Dirtymud
 
     describe '#tick!' do
       it 'calls #attack(target) on each fighter (in the order they exist in the @fighters array), passing in the other member of the fight as the target of the attack ' do
-        @player.should_receive(:attack).with(@mob).exactly(1).times
-        @mob.should_receive(:attack).with(@player).exactly(1).times
+        @player.should_receive(:attack!).with(@mob).exactly(1).times
+        @mob.should_receive(:attack!).with(@player).exactly(1).times
         @fight.tick!
       end
     end
