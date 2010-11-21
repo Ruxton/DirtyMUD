@@ -42,6 +42,11 @@ module Dirtymud
         @fight.end_fight!
         @server.fights.should_not include(@fight)
       end
+
+      it 'stops listening to events from the server' do
+        @fight.should_receive(:observe).with(@server, false)
+        @fight.end_fight!
+      end
     end
 
     describe '#ended?' do

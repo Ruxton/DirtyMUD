@@ -19,6 +19,7 @@ module Dirtymud
     def end_fight!
       @is_over = true
       @server.fights.delete(self)
+      observe(@server, false)
     end
 
     def event_tick
