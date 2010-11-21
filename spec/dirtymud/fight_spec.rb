@@ -3,9 +3,9 @@ require 'spec_helper'
 module Dirtymud
   describe Fight do
     before do
-      @server = mock(Server).as_null_object
-      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => mock(EventMachine::Connection).as_null_object, :room => mock(Room), :server => @server, :hit_points => 10)
-      @mob = Dirtymud::NPC.new(:name => 'a bunny', :hit_points => 10, :room => mock(Room), :server => @server)
+      @server = Server.new
+      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => mock(EventMachine::Connection).as_null_object, :room => mock(Room), :server => @server, :hit_points => 10, :melee_damage_per_hit => 3)
+      @mob = Dirtymud::NPC.new(:name => 'a bunny', :hit_points => 10, :room => mock(Room), :server => @server, :melee_damage_per_hit => 1)
       @fight = Fight.new(@server, @player, @mob)
     end
 
@@ -17,6 +17,10 @@ module Dirtymud
 
       it 'defaults to not being over' do
         @fight.ended?.should be_false
+      end
+
+      it 'adds itself to the server\'s list of fights' do
+        @server.fights.should include(@fight)
       end
     end
 
@@ -31,6 +35,12 @@ module Dirtymud
         @fight.ended?.should be_false
         @fight.end_fight!
         @fight.ended?.should be_true
+      end
+
+      it 'removes the fight from the server\'s @fights array' do
+        @server.fights.should include(@fight)
+        @fight.end_fight!
+        @server.fights.should_not include(@fight)
       end
     end
 
@@ -47,6 +57,14 @@ module Dirtymud
         @player.should_receive(:attack!).with(@mob).exactly(1).times
         @mob.should_receive(:attack!).with(@player).exactly(1).times
         @fight.event_tick
+      end
+
+      context 'when either player drops to 0 or lower hit points' do
+        it 'calls #end_fight!' do
+          @fight.should_receive(:end_fight!)
+          @player.hit_points = 0
+          @fight.event_tick
+        end
       end
     end
   end

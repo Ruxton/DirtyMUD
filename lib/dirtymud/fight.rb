@@ -7,7 +7,9 @@ module Dirtymud
     def initialize(server, fighter_1, fighter_2)
       @fighters = [fighter_1, fighter_2]
       @is_over = false
-      observe(server)
+      @server = server
+      @server.fights << self
+      observe(@server)
     end
 
     def ended?
@@ -16,6 +18,7 @@ module Dirtymud
 
     def end_fight!
       @is_over = true
+      @server.fights.delete(self)
     end
 
     def event_tick
@@ -27,7 +30,7 @@ module Dirtymud
         should_end = true
       end
 
-      if @fighters[1].hit_points > 0
+      if !should_end && @fighters[1].hit_points > 0
         @fighters[1].attack!(@fighters[0]) 
       else
         should_end = true

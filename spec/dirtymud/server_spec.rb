@@ -19,7 +19,6 @@ describe Dirtymud::Server do
 
     specify { subject.fights.should be_kind_of(Array) }
 
-
     describe '#initialize' do
       it 'loads the rooms' do
         #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
