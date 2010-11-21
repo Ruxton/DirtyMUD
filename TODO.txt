@@ -1,4 +1,4 @@
-Short Term
+Short Term:
   - Prompts
 
   - Ticks - STARTED
@@ -6,16 +6,15 @@ Short Term
     - #event_tick fires on each server tick
     - this is our entry point to have entities do whatever they might need to do on each tick
 
-  - Player vs Monster combat!
-    - THOUGHTS:
-      - how to keep track of each fight in progress? 
-        - keep an array of fighting entities on server?
-        - each entity knows about ticks so they could keep track of their fighting state and take a swipe at their target on each tick?
-      - does the order we resolve each battle loop iteration matter? i.e. initiative order for each fight. I think it probably does matter, which means having entities handle battle themselves won't resolve fights in an guaranteed consistent order because they're observing server events in a possibly unpredicible order, yes?
+  - Player vs Monster combat - STARTED
+      - server keeps an array of Dirtymud::Fight objects to represent each instance of a fight
+      - each fight listens for server ticks to resolve itself again and again until someone dies
+      - entities have an attack!(target) method that Fight calls on each tick for both fighters in the fight
+      - TODO:
+        - send output to the players when they attack and when they take damage
+        - add a kill <target> command to initiate a fight
+        - try it out!
 
-  
 
-
-Cool Shit To Prioritize
-  - Monsters
+Sometime Maybes:
   - Add player#tell <player> <txt> command to send a private msg player to player
