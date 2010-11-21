@@ -3,9 +3,9 @@ require 'spec_helper'
 module Dirtymud
   describe Fight do
     before do
-      @player = mock(Player)
-      @mob = mock(NPC)
       @server = mock(Server).as_null_object
+      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => mock(EventMachine::Connection).as_null_object, :room => mock(Room), :server => @server, :hit_points => 10)
+      @mob = Dirtymud::NPC.new(:name => 'a bunny', :hit_points => 10, :room => mock(Room), :server => @server)
       @fight = Fight.new(@server, @player, @mob)
     end
 
@@ -14,11 +14,31 @@ module Dirtymud
         @fight = Fight.new(@server, 1, 2)
         @fight.fighters.should == [1, 2]
       end
+
+      it 'defaults to not being over' do
+        @fight.ended?.should be_false
+      end
     end
 
     describe '#fighters' do
       it 'returns an array of the fighters in this fight' do
         @fight.fighters.should == [@player, @mob]
+      end
+    end
+
+    describe '#end_fight!' do
+      it 'ends the fight' do
+        @fight.ended?.should be_false
+        @fight.end_fight!
+        @fight.ended?.should be_true
+      end
+    end
+
+    describe '#ended?' do
+      it 'returns true when the fight is over' do
+        @fight.ended?.should be_false
+        @fight.end_fight!
+        @fight.ended?.should be_true
       end
     end
 
