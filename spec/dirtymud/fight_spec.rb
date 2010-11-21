@@ -5,12 +5,13 @@ module Dirtymud
     before do
       @player = mock(Player)
       @mob = mock(NPC)
-      @fight = Fight.new(@player, @mob)
+      @server = mock(Server).as_null_object
+      @fight = Fight.new(@server, @player, @mob)
     end
 
-    describe '#initialize(fighter_1, fighter_2)' do
+    describe '#initialize(server, fighter_1, fighter_2)' do
       it 'adds the fighters passed in to @fighters[] in order' do
-        @fight = Fight.new(1, 2)
+        @fight = Fight.new(@server, 1, 2)
         @fight.fighters.should == [1, 2]
       end
     end
@@ -21,11 +22,11 @@ module Dirtymud
       end
     end
 
-    describe '#tick!' do
+    describe '#event_tick' do
       it 'calls #attack(target) on each fighter (in the order they exist in the @fighters array), passing in the other member of the fight as the target of the attack ' do
         @player.should_receive(:attack!).with(@mob).exactly(1).times
         @mob.should_receive(:attack!).with(@player).exactly(1).times
-        @fight.tick!
+        @fight.event_tick
       end
     end
   end

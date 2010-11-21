@@ -102,6 +102,7 @@ module Dirtymud
           :server => self,
           :id => npc['id'], 
           :name => npc['name'],
+          :melee_damage_per_hit => npc['melee_damage_per_hit'],
           :hit_points => npc['hit_points'] })
       end
     end

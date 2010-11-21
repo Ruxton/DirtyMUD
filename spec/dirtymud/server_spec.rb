@@ -139,7 +139,7 @@ describe Dirtymud::Server do
       before :each do
         npcs_yaml = {
           'npcs' => [
-            {'id' => 1, 'name' => 'bunny rabbit', 'hit_points' => 10}
+            {'id' => 1, 'name' => 'bunny rabbit', 'hit_points' => 10, 'melee_damage_per_hit' => 1}
           ]
         }
 
@@ -152,6 +152,7 @@ describe Dirtymud::Server do
         @server.npcs[1].id.should == 1
         @server.npcs[1].name.should == 'bunny rabbit'
         @server.npcs[1].hit_points.should == 10
+        @server.npcs[1].melee_damage_per_hit.should == 1
       end
     end
 
