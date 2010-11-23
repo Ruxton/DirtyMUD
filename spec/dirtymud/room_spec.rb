@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Dirtymud::Room do
 
@@ -84,6 +84,46 @@ describe Dirtymud::Room do
         @room.announce("Important message")
       end
     end
+    
+    describe "#do_command" do
+    
+      before do
+        @server = mock(Dirtymud::Server).as_null_object
+        @connection = mock(EventMachine::Connection).as_null_object
+        @player = @server.player_connected!(@connection)
+        @room_center = Dirtymud::Room.new(:description => 'Room Center', :server => @server)
+        @room_n = Dirtymud::Room.new(:description => 'Room North', :server => @server)
+        @room_s = Dirtymud::Room.new(:description => 'Room South', :server => @server)
+        @room_e = Dirtymud::Room.new(:description => 'Room East', :server => @server)
+        @room_w = Dirtymud::Room.new(:description => 'Room West', :server => @server)
+        @cellar = Dirtymud::Room.new(:description => 'The Cellar', :server => @server)
+        
+        @room_w.exits = {:e => @room_center}
+        @room_e.exits = {:w => @room_center}
+        @room_n.exits = {:s => @room_center}
+        @room_s.exits = {:n => @room_center}
+        @cellar.exits = {:up => @room_center}
+        @room_center.exits = {:n => @room_n, :s => @room_s, :e => @room_e, :w => @room_w, :down => @cellar}        
+      end
+    
+      it 'allows the player to move in any directions defined by the room' do
+        #dirs = @room_center.available_exits.split(" ")
+        dirs = ["n", "N", "w", "W", "e", "E", "s", "S", "down", "DOWN"]
+        dirs.each do |dir| 
+          @player.room = @room_center
+          @player.should_receive(:go).with(dir.to_s)          
+          @room_center.do_command(@player, dir)          
+        end
+      end
+
+      it 'falls back to player.unknown_input when it has nfi' do
+        @player.room = @room_center
+        @player.should_receive(:unknown_input)
+        @room_center.do_command(@player,"iliketowritethingsthatyoushouldntread")
+      end
+
+    end
+      
 
     describe '#exits_str' do
       it 'returns the exit string for this room' do
@@ -136,6 +176,15 @@ describe Dirtymud::Room do
         end
       end
     end
+
+    describe "#inspect" do
+
+      it 'should return a string of the room ID' do
+        @room.inspect.should ==  "Room #{@room.id}"
+      end
+
+    end
+
   end
 
 end

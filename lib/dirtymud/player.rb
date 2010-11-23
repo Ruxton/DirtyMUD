@@ -3,6 +3,7 @@ module Dirtymud
     attr_accessor :connection, :items
 
     def initialize(attrs)
+      @prompt = "> "
       @items = []
       attrs.each do |k, v| 
         self.send("#{k}=", v)
@@ -11,11 +12,28 @@ module Dirtymud
       super(attrs)
     end
 
+    def prompt
+      @prompt
+    end
+
+    def announce(msg)
+      connection.write(msg)
+    end
+    
+    def promptannounce(msg)
+      msg = msg.end_with?("\n") ? msg : msg + "\n"
+      connection.write(msg)
+      connection.write(@prompt)
+    end
+
     def send_data(data)
       connection.write(data)
     end
 
     def go(dir)
+      #allow CAPITAL directions, room.available_exits and room.do_command allows this now
+      dir.downcase!
+
       #find out what room to go to
       if room.exits[dir.to_sym]
         # switch rooms
@@ -24,15 +42,15 @@ module Dirtymud
         new_room.enter(self)
 
         # send the new room look to the player
-        send_data(new_room.look_str(self))
+        promptannounce(new_room.look_str(self))
       else
-        send_data("You can't go that way. #{room.exits_str}")
+        promptannounce("#{I18n::translate "player.go.deny"} #{room.exits_str}\n")
       end
     end
 
     def say(message)
-      room.announce("#{name} says '#{message}'", :except => [self])
-      send_data("You say '#{message}'")
+      room.announce("#{name} #{I18n::translate "room.announce.say"} '#{message}'", :except => [self])
+      promptannounce("#{I18n::translate "player.say"} '#{message}'")
     end
 
     def get(item_text)
@@ -43,24 +61,24 @@ module Dirtymud
         if matches.length == 1
           item = matches[0]
 
-          #give the item to the player
+          #give th  e item to the player
           items << item
           
           #remove the item from the room
           room.items.delete(item)
           
           #tell the player they got it
-          send_data("You get #{item.name}")
+          promptannounce("#{I18n::translate "player.get.self"} #{item.name}")
 
           #tell everyone else in the room that the player took it
-          room.announce("#{self.name} picks up #{item.name}", :except => [self])
+          room.announce("#{self.name} #{I18n::translate "room.announce.get"} #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          send_data("Be more specific. Which did you want to get? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          promptannounce("#{I18n::translate "player.get.many"} #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing here by that name
-        send_data("There's nothing here that looks like '#{item_text}'")
+        promptannounce("#{I18n::translate "player.get.none"} '#{item_text}'")
       end
     end
 
@@ -79,55 +97,60 @@ module Dirtymud
           items.delete(item)
 
           #tell the player they dropped it
-          send_data("You drop #{item.name}")
+          promptannounce("#{I18n::translate "player.drop.self"} #{item.name}")
 
           #tell everyone else in the room that the player took it
-          room.announce("#{self.name} drops #{item.name}", :except => [self])
+          room.announce("#{self.name} #{I18n::translate "room.announce.drop"} #{item.name}", :except => [self])
         else
           #ask the player to be more specific
-          send_data("Be more specific. Which did you want to drop? #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
+          promptannounce("#{I18n::translate "player.drop.many"} #{matches.collect{|i| "'#{i.name}'"}.join(', ')}")
         end
       else
         #tell the player there's nothing in their inventory by that name
-        send_data("There's nothing in your inventory that looks like '#{item_text}'")
+        promptannounce("#{I18n::translate "player.drop.none"} '#{item_text}'")
       end
     end
 
     def help
       help_contents = File.read(File.expand_path('../../../world/help.txt', __FILE__))
-      send_data(help_contents)
+      promptannounce(help_contents)
     end
 
     def look
-      send_data(room.look_str(self))
+      promptannounce(room.look_str(self))
     end
 
     def inventory
-      str = "Your items:\n"
+      str = I18n::translate("player.inventory.pre")+"\n"
       if items.length > 0
         items.each { |i| str << "  - #{i.name}\n" }
       else
-        str << "  (nothing in your inventory, yet...)"
+        str << I18n::translate("player.inventory.zero")+"\n"
       end
 
-      send_data(str)
+      promptannounce(str)
     end
 
     def emote(action)
       room.announce("#{name} #{action}")
     end
 
+    def unknown_input
+      promptannounce I18n::translate("server.unknown_input")
+    end
+
     def do_command(input)
       case input
-      when /^[nesw]$/ then go(input)
-      when /^say (.+)$/ then say($1)
-      when /^get (.+)$/ then get($1)
-      when /^drop (.+)$/ then drop($1)
-      when /^(i|inv|inventory)$/ then inventory
-      when /^(l|look)$/ then look
-      when /^\/me (.+)$$/ then emote($1)
-      when /^help$/ then help
-      else help
+        when /^go (.+)$/ then go($1)
+        when /^say (.+)$/ then say($1)
+        when /^get (.+)$/ then get($1)
+        when /^drop (.+)$/ then drop($1)
+        when /^(i|inv|inventory)$/ then inventory
+        when /^(l|look)$/ then look
+        when /^\/me (.+)$$/ then emote($1)
+        when /^\?|help$/ then help
+        when /^(.)+$/ then room.do_command(self, input)
+        else look
       end
     end
   end

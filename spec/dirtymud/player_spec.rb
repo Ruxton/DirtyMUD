@@ -1,4 +1,4 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Dirtymud::Player do
   describe 'a player' do
@@ -11,7 +11,7 @@ describe Dirtymud::Player do
       @room_w = Dirtymud::Room.new(:description => 'Room West', :server => @server)
       
       @connection = mock(EventMachine::Connection).as_null_object
-      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => @connection, :room => @room1, :server => @server)
+      @player = Dirtymud::Player.new(:name => 'Dirk', :connection => @connection, :room => @room_center, :server => @server)
 
       #setup room exits
       @room_w.exits = {:e => @room_center}
@@ -25,10 +25,26 @@ describe Dirtymud::Player do
       @player.class.superclass.should == Dirtymud::Entity
     end
 
+    it 'has a name' do
+      @player.name.should == 'Dirk'
+    end
+    
+    it 'has a prompt of type String' do
+      @player.prompt.class.should == String
+    end
+
+    it 'is in a room' do
+      @player.room.should == @room_center
+    end
+
     it 'has a connection' do
       @player.should respond_to(:connection)
     end
     
+    it 'has items' do
+      @player.items.should be_kind_of(Array)
+    end
+
     describe '#go' do
       context 'moving in a valid direction' do
         it 'makes an announcement on the server' do
@@ -54,7 +70,7 @@ describe Dirtymud::Player do
       context 'moving in an invalid direction' do
         it "tells you that you can't go that way" do
           @player.room = @room_n
-          @player.connection.should_receive(:write).with("You can't go that way. [Exits: S]")
+          @player.connection.should_receive(:write).with( "You can't go that way. [Exits: S]\n") 
           @player.go('n')
         end
       end
@@ -86,7 +102,7 @@ describe Dirtymud::Player do
       end
 
       it 'sends the player confirmation about what they said' do
-        @player1.connection.should_receive(:write).with("You say 'hello'")
+        @player1.connection.should_receive(:write).with("You say 'hello'\n")
         @player1.say('hello')
       end
     end
@@ -105,7 +121,7 @@ describe Dirtymud::Player do
           @sword = Dirtymud::Item.new(:name => 'sword')
           @room.items << @sword
           @player1.items.should be_empty
-          @player1.connection.should_receive(:write).with('You get sword')
+          @player1.connection.should_receive(:write).with("You get sword\n")
           @player1.room.should_receive(:announce).with("#{@player1.name} picks up #{@sword.name}", :except => [@player1])
           @player1.get('sword')
           @player1.items.should include(@sword)
@@ -119,7 +135,7 @@ describe Dirtymud::Player do
           @room.items << @sword1
           @room.items << @sword2
           @player1.items.should be_empty
-          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to get? 'sword one', 'sword two'")
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to get? 'sword one', 'sword two'\n")
           @player1.get('sword')
           @player1.items.should be_empty
         end
@@ -127,7 +143,7 @@ describe Dirtymud::Player do
 
       context 'when there are no matches' do
         it 'tells the player there arent any of that thing here' do
-          @player1.connection.should_receive(:write).with("There's nothing here that looks like 'foo'")
+          @player1.connection.should_receive(:write).with("There's nothing here that looks like 'foo'\n")
           @player1.get('foo')
           @player1.items.should be_empty
         end
@@ -151,7 +167,7 @@ describe Dirtymud::Player do
           @player1.items.should include(@sword)
           @player1.room.items.should_not include(@sword)
 
-          @player1.connection.should_receive(:write).with('You drop sword')
+          @player1.connection.should_receive(:write).with("You drop sword\n")
           @player1.room.should_receive(:announce).with("#{@player1.name} drops #{@sword.name}", :except => [@player1])
           @player1.drop('sword')
 
@@ -168,7 +184,7 @@ describe Dirtymud::Player do
           @player1.items << @sword2
           @player1.items.should include(@sword1, @sword2)
 
-          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to drop? 'sword one', 'sword two'")
+          @player1.connection.should_receive(:write).with("Be more specific. Which did you want to drop? 'sword one', 'sword two'\n")
 
           @player1.drop('sword')
           @player1.items.should include(@sword1, @sword2)
@@ -177,7 +193,7 @@ describe Dirtymud::Player do
 
       context 'when there are no matches' do
         it 'tells the player there arent any of that thing in their inventoryj' do
-          @player1.connection.should_receive(:write).with("There's nothing in your inventory that looks like 'foo'")
+          @player1.connection.should_receive(:write).with("There's nothing in your inventory that looks like 'foo'\n")
           @player1.drop('foo')
         end
       end
@@ -194,7 +210,7 @@ describe Dirtymud::Player do
       context 'when the player does not have anything in his inventory' do
         it 'sends the player connection an empty inventory list' do
           @player.items = [ ]
-          @player.connection.should_receive(:write).with("Your items:\n  (nothing in your inventory, yet...)")
+          @player.connection.should_receive(:write).with("Your items:\n  (nothing in your inventory, yet...)\n")
           @player.inventory
         end
       end
@@ -218,16 +234,14 @@ describe Dirtymud::Player do
       end
     end
 
-    describe '#do_command' do
-      it 'handles commands for the cardinal directions' do
-        dirs = %w(n e s w)
-        dirs.each do |dir| 
-          @player.should_receive(:go).with(dir.to_s)
-          @player.room = @room_center
-          @player.do_command(dir)
-        end
+    describe '#unknown_input' do
+      it 'sends a message to the player' do
+        @player.connection.should_receive(:write).with("have you tried help?!\n")
+        @player.unknown_input
       end
+    end
 
+    describe '#do_command' do
       it 'handles look' do
         @player.should_receive(:look).exactly(2).times
         @player.do_command('look')
@@ -261,6 +275,17 @@ describe Dirtymud::Player do
         #handles help
         @player.should_receive(:help)
         @player.do_command('help')
+      end
+
+      # The player asks the room to move, the room says ok and calls player.go
+      it 'passes unknown commands (like movement) to the room' do
+        @room_center.should_receive(:do_command).with(@player,'n')
+        @player.do_command('n')
+      end
+
+      it 'handles empty commands as look' do
+        @player.should_receive(:look)
+        @player.do_command('')
       end
     end
 

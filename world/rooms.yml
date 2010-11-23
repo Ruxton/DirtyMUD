@@ -17,3 +17,9 @@ world:
       description: "There is a room to the south. It doesnt look dangerous at all"
       exits:
         n: 1
+        down: 4
+    - id: 4
+      description: "Welcome to the basement, it's nice to be able to move in 3 dimensions"
+      exits:
+        up: 3
+      

@@ -1,0 +1,30 @@
+en:
+  player:
+    go:
+      deny: "You can't go that way."
+    say: "You say"
+    drop:
+      self: "You drop"
+      many: "Be more specific. Which did you want to drop?"
+      none: "There's nothing in your inventory that looks like"
+    get:
+      self: "You get"
+      many: "Be more specific. Which did you want to get?"
+      none: "There's nothing here that looks like"
+    inventory:
+      pre: "Your items:"
+      zero: "  (nothing in your inventory, yet...)"
+  room:
+    announce:
+      drop: "drops"
+      get: "picks up"
+      say: "says"
+      leave: "has left the room."
+      enter: "has entered the room."
+    items:
+      pre: "Items here:"
+  server:
+    unknown_input: "have you tried help?!"
+    ask:
+      character_name: "Enter your character name:"
+      character_password: "Please enter your password:"

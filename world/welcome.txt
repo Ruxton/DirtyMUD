@@ -1,0 +1,16 @@
+
+
+        .sSSSSs.                                                    .sSSSsSS SSsSSSSS .sSSS s.    .sSSSSs.
+        SSSSSSSSSs. SSSSS .sSSSSSSSs. .sSSSSSSSSSSSSSs. .sSSS SSSSS SSSSS  SSS  SSSSS SSSSS SSSs. SSSSSSSSSs.
+        S SSS SSSSS S SSS S SSS SSSSS SSSSS S SSS SSSSS S SSS SSSSS S SSS   S   SSSSS S SSS SSSSS S SSS SSSSS
+        S  SS SSSSS S  SS S  SS SSSS' SSSSS S  SS SSSSS S  SS SSSSS S  SS       SSSSS S  SS SSSSS S  SS SSSSS
+        S..SS SSSSS S..SS S..SSsSSSa. `:S:' S..SS `:S:' `..SSsSSSS' S..SS       SSSSS S..SS SSSSS S..SS SSSSS
+        S:::S SSSSS S:::S S:::S SSSSS       S:::S          S:::S    S:::S       SSSSS S:::S SSSSS S:::S SSSSS
+        S;;;S SSSSS S;;;S S;;;S SSSSS       S;;;S          S;;;S    S;;;S       SSSSS S;;;S SSSSS S;;;S SSSSS
+        S%%%S SSSS' S%%%S S%%%S SSSSS       S%%%S          S%%%S    S%%%S       SSSSS S%%%S SSSSS S%%%S SSSS'
+        SSSSSsS;:'  SSSSS SSSSS SSSSS       SSSSS          SSSSS    SSSSS       SSSSS SSSSSsSSSSS SSSSSsS;:'
+
+
+                                 [ Welcome to DirtyMUD, a dirty, dirty mud. ]
+
+------------------------------------------------------------------------------------------------------------------------

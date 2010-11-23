@@ -1,10 +1,10 @@
-require 'spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Dirtymud::Server do
   describe 'a server' do
     before { @server = Dirtymud::Server.new }
     subject { @server }
-
+  
     it 'has a players_by_connection hash' do
       @server.players_by_connection.should be_kind_of(Hash)
     end
@@ -21,10 +21,10 @@ describe Dirtymud::Server do
 
     describe '#initialize' do
       it 'loads the rooms' do
-        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+        pending "find out how to test an that an initializer invokes some methods like #load_rooms!"
       end
       it 'loads the items' do
-        #TODO: find out how to test an that an initializer invokes some methods like #load_rooms!
+        pending "find out how to test an that an initializer invokes some methods like #load_rooms!"
       end
     end
 
@@ -43,14 +43,45 @@ describe Dirtymud::Server do
 
     describe '#player_connected!(connection)' do
       before do
-        @dirk_con = mock(EventMachine::Connection)
+        @dirk_con = mock(EventMachine::Connection).as_null_object
+        @player = Dirtymud::Player.new( :name => 'Dirk', :connection => @dirk_con, :server => @server )
+      end
+      
+      it 'adds a new player to players_by_connection hash' do
+        @server.player_connected!(@dirk_con, :name => 'Dirk')        
+        @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
+      end  
+
+      it 'sends them the initial room description' do
+        @dirk_con.should_receive(:write).with("#{@server.starting_room.look_str(@player)}")
+        @server.player_connected!(@dirk_con, :name => 'Dirk')
+      end
+      
+      it 'deletes any unauthed users' do
+        pending "will work on this soon"
       end
 
-      it 'creates a new player, adds them to players_by_connection hash, and sends them the initial room description' do
-        #REFACTOR: split these assertions into seperate expectations, if possible.
-        @dirk_con.should_receive(:write).with("#{@server.starting_room.look_str(nil)}")
-        @server.player_connected!(@dirk_con, :name => 'Dirk')
-        @server.players_by_connection[@dirk_con].should be_kind_of(Dirtymud::Player)
+    end
+
+    describe '#user_connected!' do
+      before do
+        @dirk_con = mock(EventMachine::Connection).as_null_object
+      end
+
+      it 'should add you to unauthed users' do
+        pending "this limbo is an annoying tests! halp!"
+      end
+      
+      it 'should send you the welcome message' do
+        @msg = "Welcome to DirtyMud"
+        File.stub!(:read) { @msg }
+        @dirk_con.should_receive(:write).with(@msg)
+        @server.user_connected!(@dirk_con)
+      end
+      
+      it 'should ask for a character name' do
+        @dirk_con.should_receive(:write).with("Enter your character name:")
+        @server.user_connected!(@dirk_con)
       end
     end
 

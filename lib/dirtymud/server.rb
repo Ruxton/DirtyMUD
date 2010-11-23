@@ -23,7 +23,7 @@ module Dirtymud
         con_state = @unauthed_users[from_connection]
         if con_state[:name].nil?
           con_state[:name] = input.chomp
-          from_connection.write 'Please enter your password: '
+          from_connection.write "#{I18n::translate "server.ask.character_password"}"
         elsif con_state[:password].nil?
           con_state[:password] = input.chomp
           #TODO: verify password at some point
@@ -35,9 +35,16 @@ module Dirtymud
       end
     end
 
+    def welcome_message(connection)
+      file = File.expand_path('../../../world/welcome.txt', __FILE__)
+      welcome_contents = File.read(file)
+      connection.write(welcome_contents)
+    end
+
     def user_connected!(connection)
       @unauthed_users[connection] = {}
-      connection.write 'Enter Your Character Name: '
+      welcome_message(connection)
+      connection.write "#{I18n::translate "server.ask.character_name"}"
     end
 
     def player_connected!(connection, params = {})
@@ -45,11 +52,11 @@ module Dirtymud
       @players_by_connection[connection] = player
 
       @starting_room.enter(player)
-      player.send_data(@starting_room.look_str(player))
+      player.promptannounce(@starting_room.look_str(player))
 
       @unauthed_users.delete(connection) #TODO test this
 
-      return player
+      player
     end
 
     def announce(message, options = {})
@@ -57,7 +64,7 @@ module Dirtymud
       players = players.reject {|p| options[:except].include?(p)} if options.has_key?(:except)
 
       players.each do |player|
-        player.send_data("#{message}")
+        player.announce("#{message}")
       end
     end
 

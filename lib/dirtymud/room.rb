@@ -15,23 +15,26 @@ module Dirtymud
     def enter(player)
       player.room = self
       players.push(player)
-      # annoucne to other players that they've entered the room
-      announce("#{player.name} has entered the room.", :except => [player])
+      # announce to other players that they've entered the room
+      announce("#{player.name} #{I18n::translate "room.announce.enter"}", :except => [player])
     end
 
     def leave(player)
       players.delete(player)
-      # annoucne to other players that they've left the room
-      announce("#{player.name} has left the room.", :except => [player])
+      # announce to other players that they've left the room
+      announce("#{player.name} #{I18n::translate "room.announce.leave"}", :except => [player])
     end
 
     def announce(message, options = {})
       server.announce(message, options.merge(:only => players))
     end
 
+    def available_exits
+      exits.collect{|dir, room| dir.to_s.downcase+' '+dir.to_s.upcase}.join(' ')
+    end
 
     def exits_str
-      dirs = exits.collect{|dir, room| dir.to_s.upcase}.join(' ')
+      dirs = exits.collect{|dir, room| dir.to_s.upcase}.join(', ')
       "[Exits: #{dirs}]"
     end
 
@@ -45,7 +48,7 @@ module Dirtymud
     def items_str
       str = ""
       if items.length > 0
-        str = "Items here:\n"
+        str = "#{I18n::translate "room.items.pre"}\n"
         items.each { |i| str << "  - #{i.name}\n" }
       end
 
@@ -55,9 +58,19 @@ module Dirtymud
     def look_str(for_player)
       str = ""
       str << description + "\n"
-      str << exits_str + "\n"
       str << items_str + "\n"
       str << players_str(for_player) + "\n"
+      str << exits_str + "\n"      
+    end
+
+    def do_command(player,input)
+      dirs = self.available_exits + " n e s w N E S W"
+      
+      dirs = dirs.gsub " ", "|"
+      case input
+        when /^(#{dirs})$/ then player.go(input)
+        else player.unknown_input
+      end
     end
 
     def inspect

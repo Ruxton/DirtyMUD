@@ -11,6 +11,7 @@ module Dirtymud
       @identifier = self.object_id
 
       $server.user_connected!(self)
+
     end
 
     def receive_data(data)
@@ -23,7 +24,7 @@ module Dirtymud
     end
 
     def write(data)
-      send_data(data + "\n\n")
+      send_data(data)
     end
   end
 end
