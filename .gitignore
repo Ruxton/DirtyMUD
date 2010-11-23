@@ -1,1 +1,4 @@
 .bundle
+*.swp
+*.swo
+*.swn
