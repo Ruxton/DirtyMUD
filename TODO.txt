@@ -5,11 +5,14 @@ Short Term:
     - entities now listen for server ticks when they're created
     - #event_tick fires on each server tick
     - this is our entry point to have entities do whatever they might need to do on each tick
+    - TODO: actually trigger @server#tick! in an eventmachine periodic timer after server is created
 
   - Player vs Monster combat - STARTED
       - server keeps an array of Dirtymud::Fight objects to represent each instance of a fight
+      - TODO: move this from server to room. the room is where the fight happens so it should track the fight.
       - each fight listens for server ticks to resolve itself again and again until someone dies
       - entities have an attack!(target) method that Fight calls on each tick for both fighters in the fight
+      - TODO: consider two players attacking same mob. mob should only (For now) attack one of those players, so change this fight implementation to suit that. in current code, mob would attack both people attacking him (since two fight objects would get instantiated)
       - TODO:
         - send output to the players when they attack and when they take damage
         - add a kill <target> command to initiate a fight
