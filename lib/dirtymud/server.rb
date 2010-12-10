@@ -9,6 +9,7 @@ module Dirtymud
     def initialize
       @unauthed_users = {}
       @players_by_connection = {}
+      @players_by_name=  {}
       @rooms = {}
       @items = {}
       @npcs = {}
@@ -50,6 +51,7 @@ module Dirtymud
     def player_connected!(connection, params = {})
       player = Player.new(:name => params[:name], :connection => connection, :server => self)
       @players_by_connection[connection] = player
+      @players_by_name[player.name] = { player, connection}
 
       @starting_room.enter(player)
       player.promptannounce(@starting_room.look_str(player))
