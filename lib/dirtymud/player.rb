@@ -17,7 +17,8 @@ module Dirtymud
     end
 
     def announce(msg)
-      connection.write(msg)
+      msg = msg.end_with?("\n") ? msg : msg + "\n" 
+      connection.write("\n"+msg)
     end
     
     def promptannounce(msg)
@@ -131,6 +132,12 @@ module Dirtymud
       promptannounce(str)
     end
 
+    def tell(name,msg)
+      target_player = server.players_by_name[name.downcase]
+      target_player.promptannounce("#{self.name} whispers: #{msg}")
+      promptannounce("You whisper to #{name}: #{msg}")
+    end
+
     def emote(action)
       room.announce("#{name} #{action}")
     end
@@ -147,6 +154,7 @@ module Dirtymud
         when /^drop (.+)$/ then drop($1)
         when /^(i|inv|inventory)$/ then inventory
         when /^(l|look)$/ then look
+        when /^(t|tell) ([A-Za-z0-9]+) (.+)$$/ then tell($2,$3)
         when /^\/me (.+)$$/ then emote($1)
         when /^\?|help$/ then help
         when /^(.)+$/ then room.do_command(self, input)

@@ -4,7 +4,7 @@ module Dirtymud
   class Server
     include Observable
 
-    attr_accessor :players_by_connection, :rooms, :starting_room, :items, :npcs, :fights
+    attr_accessor :players_by_connection, :players_by_name, :rooms, :starting_room, :items, :npcs, :fights
 
     def initialize
       @unauthed_users = {}
@@ -16,6 +16,10 @@ module Dirtymud
       @fights = []
       load_items!
       load_rooms!
+    end
+
+    def log(msg)
+      puts "[#{Time::now}] #{msg}"
     end
 
     def input_received!(from_connection, input)
@@ -32,8 +36,23 @@ module Dirtymud
           player = player_connected!(from_connection, :name => con_state[:name])
         end
       else
-        @players_by_connection[from_connection].send(:do_command, input)
+        do_command(from_connection,input)
       end
+    end
+
+    def do_command(connection,input)
+      case input
+      when /^who$/ then players_online(connection)
+      else @players_by_connection[connection].send(:do_command, input)
+      end
+    end
+
+    def players_online(connection)
+      output = "Current players online: "
+      @players_by_connection.each do |player|
+        output += "#{player.name}"
+      end
+      @players_by_connection[connection].send(:promptannounce, output)
     end
 
     def welcome_message(connection)
@@ -51,12 +70,13 @@ module Dirtymud
     def player_connected!(connection, params = {})
       player = Player.new(:name => params[:name], :connection => connection, :server => self)
       @players_by_connection[connection] = player
-      @players_by_name[player.name] = { player, connection}
-
-      @starting_room.enter(player)
-      player.promptannounce(@starting_room.look_str(player))
+      @players_by_name[player.name.downcase] = player
 
       @unauthed_users.delete(connection) #TODO test this
+      
+      @starting_room.enter(player)
+      player.promptannounce(@starting_room.look_str(player))
+      log "#{player.name} has joined the server."
 
       player
     end
